@@ -107,7 +107,7 @@ zip -r legacy-ux-helper.zip manifest.json background.js content.js styles.css po
 En el formulario de privacidad de la store:
 
 - **Recopila datos personales:** No
-- **Política de privacidad:** URL pública a [PRIVACY.md](https://github.com/NicLen17/legacy-ux-helper/blob/main/PRIVACY.md) en GitHub
+- **Política de privacidad:** [PRIVACY.md](https://github.com/NicLen17/legacy-ux-helper/blob/master/PRIVACY.md)
 - **Permisos:** Justificá `storage` (preferencias locales) y `activeTab` (toggle en pestaña activa)
 - **Host permissions:** Ninguno adicional (content scripts declarados en manifest)
 
