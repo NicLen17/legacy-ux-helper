@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Legacy UX Helper — Página de prueba</title>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        padding: 20px;
+        background: #f0f0f0;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      td,
+      th {
+        border: 1px solid #999;
+        padding: 8px;
+        text-align: left;
+      }
+
+      .legacy-btn {
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+      }
+
+      .float-left {
+        float: left;
+        width: 48%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+
+      .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Página de prueba — Legacy UX Helper</h1>
+    <p>Activa la extensión y verifica que los elementos accionables se resaltan sin mover el layout.</p>
+
+    <h2>Elementos semánticos</h2>
+    <a href="#">Enlace de prueba</a>
+    <button type="button">Botón nativo</button>
+    <input type="text" placeholder="Campo de texto" />
+    <select>
+      <option>Opción 1</option>
+      <option>Opción 2</option>
+    </select>
+    <textarea rows="2" cols="30">Área de texto</textarea>
+
+    <h2>ARIA y tabindex</h2>
+    <div role="button" tabindex="0">Div con role=button</div>
+    <span role="link" tabindex="0">Span con role=link</span>
+
+    <h2>Legacy handlers</h2>
+    <div onclick="alert('click')" class="legacy-btn">Div con onclick</div>
+    <span style="cursor: pointer">Span con cursor pointer</span>
+    <div class="legacy-custom-action" style="cursor: pointer">Acción custom (.legacy-custom-action)</div>
+
+    <h2>Tabla (verificar sin layout shift)</h2>
+    <table>
+      <tr>
+        <th>Columna A</th>
+        <th>Columna B</th>
+        <th>Acción</th>
+      </tr>
+      <tr>
+        <td>Dato 1</td>
+        <td>Dato 2</td>
+        <td><button type="button">Editar</button></td>
+      </tr>
+      <tr>
+        <td>Dato 3</td>
+        <td>Dato 4</td>
+        <td class="legacy-btn">Eliminar (legacy)</td>
+      </tr>
+      <tr onclick="alert('fila clickeable')">
+        <td colspan="3" style="cursor: pointer; color: blue">Fila completa clickeable (legacy ERP)</td>
+      </tr>
+    </table>
+
+    <h2>Layout con floats</h2>
+    <div class="clearfix">
+      <div class="float-left">
+        <p>Panel izquierdo</p>
+        <input type="button" value="Acción izquierda" />
+      </div>
+      <div class="float-left">
+        <p>Panel derecho</p>
+        <input type="button" value="Acción derecha" />
+      </div>
+    </div>
+
+    <h2>iFrame embebido</h2>
+    <iframe
+      srcdoc="<!DOCTYPE html><html><body style='font-family:Tahoma;padding:10px'><p>Contenido dentro de iframe</p><button type='button'>Botón en iframe</button><div style='cursor:pointer'>Div pointer en iframe</div></body></html>"
+      width="100%"
+      height="120"
+      style="border: 1px solid #999"
+    ></iframe>
+
+    <h2>Contenido dinámico</h2>
+    <button type="button" id="add-dynamic">Agregar elemento dinámico</button>
+    <div id="dynamic-container"></div>
+
+    <script>
+      document.getElementById("add-dynamic").addEventListener("click", function () {
+        const container = document.getElementById("dynamic-container");
+        const el = document.createElement("div");
+        el.style.cursor = "pointer";
+        el.textContent = "Elemento dinámico " + (container.children.length + 1);
+        container.appendChild(el);
+      });
+    </script>
+  </body>
+</html>

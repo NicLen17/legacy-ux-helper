@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Legacy UX Helper — Configuración</title>
+    <link rel="stylesheet" href="shared/ui.css" />
+    <style>
+      body { min-height: 100vh; padding: 24px; }
+      .layout { max-width: 760px; margin: 0 auto; display: grid; gap: 16px; }
+      .card { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08); }
+      .card h1 { font-size: 1.35rem; margin-bottom: 6px; }
+      .card > p { color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px; }
+      .card h2 { font-size: 1rem; margin-bottom: 10px; }
+      .preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-top: 12px; }
+      .preview-chip { padding: 10px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; text-align: center; font-size: 0.75rem; font-weight: 600; }
+      .preview-chip span { display: inline-block; margin-top: 8px; padding: 6px 10px; border-radius: 6px; background: #e2e8f0; }
+      .appearance-grid { border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; background: #f8fafc; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+      .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+      .preset-btn { height: 34px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
+      .preset-btn:hover { background: #eff6ff; border-color: #93c5fd; }
+      .range-row label { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+      .segmented-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .segmented-3 button { height: 36px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.78rem; font-weight: 600; }
+      .segmented-3 button.active { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
+      #import-input { display: none; }
+      .privacy-note { font-size: 0.8rem; color: #64748b; background: #f1f5f9; border-radius: 8px; padding: 10px 12px; }
+    </style>
+  </head>
+  <body>
+    <main class="layout">
+      <section class="card">
+        <h1>Legacy UX Helper</h1>
+        <p>
+          Configuración 100% local. No se guardan dominios, URLs ni historial de navegación.
+          Solo preferencias de resaltado en tu navegador.
+        </p>
+        <p class="privacy-note">
+          Almacenamiento: <code>chrome.storage.local</code> · Permisos mínimos: <code>storage</code> y <code>activeTab</code>
+        </p>
+      </section>
+
+      <form id="options-form">
+        <section class="card">
+          <h2>Presets de accesibilidad</h2>
+          <div class="preset-row" id="preset-row"></div>
+        </section>
+
+        <section class="card">
+          <h2>Colores por tipo de elemento</h2>
+          <div id="color-grid" class="color-grid"></div>
+          <div class="preview-grid" id="preview-grid"></div>
+        </section>
+
+        <section class="card">
+          <h2>Estilo visual</h2>
+          <div class="appearance-grid">
+            <div>
+              <label class="field-label" for="outline-style">Estilo de borde</label>
+              <select id="outline-style" class="text-input">
+                <option value="dashed">Punteado</option>
+                <option value="solid">Sólido</option>
+                <option value="dotted">Puntos</option>
+              </select>
+            </div>
+            <div class="range-row">
+              <label for="outline-width">Grosor <span id="outline-width-value">2px</span></label>
+              <input id="outline-width" type="range" min="1" max="6" step="1" />
+            </div>
+            <div class="range-row">
+              <label for="outline-offset">Separación <span id="outline-offset-value">2px</span></label>
+              <input id="outline-offset" type="range" min="0" max="8" step="1" />
+            </div>
+            <div class="range-row">
+              <label for="glow-intensity">Intensidad glow <span id="glow-intensity-value">40%</span></label>
+              <input id="glow-intensity" type="range" min="0" max="100" step="5" />
+            </div>
+          </div>
+          <div class="toggle-row" style="margin-top: 12px">
+            <div><strong>Activar glow (sombra)</strong></div>
+            <label class="switch"><input id="glow-enabled" type="checkbox" /><span class="switch-slider"></span></label>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Modos y funciones</h2>
+          <div class="field-label">Modo de resaltado</div>
+          <div class="segmented-3" id="mode-segmented">
+            <button type="button" data-mode="all" class="active">Todos</button>
+            <button type="button" data-mode="legacy">Solo legacy</button>
+            <button type="button" data-mode="hover">Guía hover</button>
+          </div>
+
+          <div class="color-grid" style="margin-top: 12px">
+            <div class="toggle-row">
+              <div><strong>Modo entrenamiento</strong></div>
+              <label class="switch"><input id="training-mode" type="checkbox" /><span class="switch-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><strong>Indicador flotante</strong></div>
+              <label class="switch"><input id="floating-indicator" type="checkbox" /><span class="switch-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><strong>Escanear Shadow DOM</strong></div>
+              <label class="switch"><input id="scan-shadow-dom" type="checkbox" /><span class="switch-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><strong>Solo viewport visible</strong></div>
+              <label class="switch"><input id="viewport-only" type="checkbox" /><span class="switch-slider"></span></label>
+            </div>
+            <div class="toggle-row">
+              <div><strong>Pausar si pestaña oculta</strong></div>
+              <label class="switch"><input id="pause-when-hidden" type="checkbox" /><span class="switch-slider"></span></label>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px">
+            <label class="field-label" for="global-exclusions">Exclusiones (selectores CSS)</label>
+            <textarea id="global-exclusions" class="code-input" placeholder="nav a, .decorative-link"></textarea>
+          </div>
+
+          <div style="margin-top: 16px">
+            <label class="field-label" for="custom-selectors">Selectores custom (selectores CSS)</label>
+            <textarea id="custom-selectors" class="code-input" placeholder=".btn-guardar, td.action, #btnSubmit"></textarea>
+            <div class="field-hint">Resalta elementos extra en cualquier sitio. No se guarda el dominio visitado.</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Exportar / Importar (opcional)</h2>
+          <p>Copia de seguridad local de tu configuración. El archivo JSON se guarda en tu equipo.</p>
+          <div class="actions">
+            <button type="button" id="export-btn" class="btn btn-secondary">Exportar JSON</button>
+            <button type="button" id="import-btn" class="btn btn-secondary">Importar JSON</button>
+            <input id="import-input" type="file" accept="application/json,.json" />
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Guardar configuración</button>
+            <button type="button" id="reset-btn" class="btn btn-secondary">Restablecer todo</button>
+          </div>
+          <div id="status" class="status" role="status" aria-live="polite"></div>
+        </section>
+      </form>
+    </main>
+
+    <script src="shared/settings.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

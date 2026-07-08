@@ -1,0 +1,207 @@
+/* Legacy UX Helper — resaltado sin layout shifts */
+
+:root {
+  --luxh-outline-style: dashed;
+  --luxh-outline-width: 2px;
+  --luxh-outline-offset: 2px;
+  --luxh-glow-size: 8px;
+  --luxh-color-button: #22c55e;
+  --luxh-glow-button: rgba(34, 197, 94, 0.4);
+  --luxh-color-link: #3b82f6;
+  --luxh-glow-link: rgba(59, 130, 246, 0.4);
+  --luxh-color-input: #f59e0b;
+  --luxh-glow-input: rgba(245, 158, 11, 0.4);
+  --luxh-color-select: #8b5cf6;
+  --luxh-glow-select: rgba(139, 92, 246, 0.4);
+  --luxh-color-textarea: #06b6d4;
+  --luxh-glow-textarea: rgba(6, 182, 212, 0.4);
+  --luxh-color-aria: #ec4899;
+  --luxh-glow-aria: rgba(236, 72, 153, 0.4);
+  --luxh-color-legacy: #ef4444;
+  --luxh-glow-legacy: rgba(239, 68, 68, 0.4);
+  --luxh-color-custom: #14b8a6;
+  --luxh-glow-custom: rgba(20, 184, 166, 0.4);
+  --luxh-color-table: #a855f7;
+  --luxh-glow-table: rgba(168, 85, 247, 0.4);
+}
+
+body.legacy-ux-helper-active :is(a[href], area[href], [role="link"]) {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-link) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-link) !important;
+}
+
+body.legacy-ux-helper-active :is(button, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]) {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-button) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-button) !important;
+}
+
+body.legacy-ux-helper-active :is(input:not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="reset"]), [role="checkbox"], [role="radio"], [role="switch"]) {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-input) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-input) !important;
+}
+
+body.legacy-ux-helper-active :is(select, [role="listbox"], [role="combobox"]) {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-select) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-select) !important;
+}
+
+body.legacy-ux-helper-active :is(textarea, [role="textbox"]) {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-textarea) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-textarea) !important;
+}
+
+body.legacy-ux-helper-active :is(summary, [role="menuitem"], [role="tab"], [tabindex]:not([tabindex="-1"])) {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-aria) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-aria) !important;
+}
+
+body.legacy-ux-helper-active [data-luxh-type="table"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-table) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-table) !important;
+}
+
+body.legacy-ux-helper-active :is(
+  [data-legacy-ux-helper-pointer="true"],
+  [data-legacy-ux-helper-onclick="true"]
+) {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-legacy) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-legacy) !important;
+}
+
+body.legacy-ux-helper-active [data-legacy-ux-helper-custom="true"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-custom) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-custom) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-legacy-only :is(
+  a[href], area[href], button, input, select, textarea, summary, [role], [tabindex]
+) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-legacy-only :is(
+  [data-luxh-type="table"],
+  [data-legacy-ux-helper-pointer="true"],
+  [data-legacy-ux-helper-onclick="true"],
+  [data-legacy-ux-helper-custom="true"]
+) {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-legacy) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-legacy) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-legacy-only [data-legacy-ux-helper-custom="true"] {
+  outline-color: var(--luxh-color-custom) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-custom) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-legacy-only [data-luxh-type="table"] {
+  outline-color: var(--luxh-color-table) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-table) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode :is(
+  a[href], area[href], button, input, select, textarea, summary,
+  [role], [tabindex], [data-luxh-type], [data-legacy-ux-helper-pointer="true"],
+  [data-legacy-ux-helper-onclick="true"], [data-legacy-ux-helper-custom="true"]
+) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="link"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-link) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-link) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="button"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-button) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-button) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="input"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-input) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-input) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="select"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-select) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-select) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="textarea"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-textarea) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-textarea) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="aria"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-aria) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-aria) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="legacy"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-legacy) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-legacy) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="custom"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-custom) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-custom) !important;
+}
+
+body.legacy-ux-helper-active.legacy-ux-helper-hover-mode .legacy-ux-helper-hover-focus[data-luxh-type="table"] {
+  outline: var(--luxh-outline-width) var(--luxh-outline-style) var(--luxh-color-table) !important;
+  outline-offset: var(--luxh-outline-offset) !important;
+  box-shadow: 0 0 var(--luxh-glow-size) var(--luxh-glow-table) !important;
+}
+
+#luxh-floating-indicator {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2147483646;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.92);
+  color: #ffffff;
+  font: 600 12px/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+  pointer-events: none;
+}
+
+#luxh-labels-root {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483645;
+  pointer-events: none;
+}
+
+.luxh-training-label {
+  position: fixed;
+  z-index: 2147483647;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #ffffff;
+  font: 600 10px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  white-space: nowrap;
+  pointer-events: none;
+}
