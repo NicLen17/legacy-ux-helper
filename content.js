@@ -7,7 +7,6 @@ globalThis.__legacyUxHelperInitialized = true;
 const ACTIVE_CLASS = "legacy-ux-helper-active";
 const LEGACY_ONLY_CLASS = "legacy-ux-helper-legacy-only";
 const HOVER_MODE_CLASS = "legacy-ux-helper-hover-mode";
-const MODERNIZE_CLASS = "legacy-ux-helper-modernize";
 const TRAINING_CLASS = "legacy-ux-helper-training";
 const HOVER_FOCUS_CLASS = "legacy-ux-helper-hover-focus";
 const POINTER_ATTR = "data-legacy-ux-helper-pointer";
@@ -306,7 +305,6 @@ function applyModeClasses(settings) {
 
   document.body.classList.toggle(LEGACY_ONLY_CLASS, settings.mode === "legacy");
   document.body.classList.toggle(HOVER_MODE_CLASS, settings.mode === "hover");
-  document.body.classList.remove(MODERNIZE_CLASS);
   document.body.classList.toggle(TRAINING_CLASS, settings.features.trainingMode);
 }
 
@@ -556,7 +554,6 @@ function deactivateHighlight() {
   document.body.classList.remove(ACTIVE_CLASS);
   document.body.classList.remove(LEGACY_ONLY_CLASS);
   document.body.classList.remove(HOVER_MODE_CLASS);
-  document.body.classList.remove(MODERNIZE_CLASS);
   document.body.classList.remove(TRAINING_CLASS);
   isActive = false;
   stopMutationObserver();

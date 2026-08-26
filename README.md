@@ -65,6 +65,7 @@ Probá también con `test-page.html` incluido en el repo.
 ├── icons/app-*.png          # identificador (Web Store, chrome://extensions)
 ├── icons/toolbar-*.png      # icono de acceso rápido (toolbar)
 ├── docs/linkedin-post-v1.4.md
+├── docs/store/               # capturas y tiles para Chrome Web Store
 ├── test-page.html
 ├── PRIVACY.md
 └── README.md
@@ -89,6 +90,7 @@ Para regenerar los PNG en Windows: `node scripts/generate-icons.js`.
 2. Extensión probada y funcionando en modo desarrollador
 3. Iconos en 128×128 px: identificador `icons/app-128.png` e icono de toolbar `icons/toolbar-128.png`
 4. Política de privacidad pública (usá `PRIVACY.md` en GitHub Pages o en el repo)
+5. Imágenes de ficha en `docs/store/` (capturas 1280×800 y tile 440×280)
 
 ### Paso 1: Preparar el paquete ZIP
 
@@ -119,8 +121,14 @@ zip -r legacy-ux-helper.zip manifest.json background.js content.js styles.css po
    - **Descripción corta:** Resalta elementos accionables en UIs legacy. 100% local.
    - **Descripción detallada:** (ver copy abajo)
    - **Categoría:** Productivity
-   - **Screenshots:** Mínimo 1 (1280×800 recomendado) mostrando el resaltado en una UI legacy
-   - **Icono:** `icons/app-128.png` (identificador de la app; el de acceso rápido en la toolbar es `icons/toolbar-128.png`)
+   - **Screenshots:** Subí las de `docs/store/` (1280×800, JPEG sin transparencia)
+     1. `screenshot-1-all.jpg` — modo Todos en un ERP legacy
+     2. `screenshot-2-legacy.jpg` — modo Solo legacy
+     3. `screenshot-3-popup.jpg` — popup + icono de acceso rápido
+     4. `screenshot-4-options.jpg` — página de configuración
+   - **Icono de la ficha:** `icons/app-128.png`
+   - **Imagen promocional pequeña (obligatoria, 440×280):** `docs/store/promo-small-440x280.jpg`
+   - **Marquee opcional (1400×560, para destacar):** `docs/store/promo-marquee-1400x560.jpg`
 
 #### Copy para la ficha (Chrome Web Store)
 

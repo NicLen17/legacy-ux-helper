@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Legacy UX Helper — popup preview</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1280px;
+        height: 800px;
+        overflow: hidden;
+        background: #0f172a;
+      }
+
+      iframe {
+        border: 0;
+        background: #f8fafc;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: 1fr 392px;
+        height: 800px;
+      }
+
+      .erp {
+        width: 100%;
+        height: 800px;
+      }
+
+      .chrome-side {
+        background: #1e293b;
+        padding: 24px 16px 16px;
+        box-sizing: border-box;
+      }
+
+      .toolbar-mock {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        color: #e2e8f0;
+        font: 600 12px/1 system-ui, sans-serif;
+      }
+
+      .toolbar-mock img {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: #fff;
+      }
+
+      .popup-frame {
+        width: 360px;
+        height: 520px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+        margin-left: auto;
+        background: #fff;
+      }
+
+      .popup-frame iframe {
+        width: 360px;
+        height: 520px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <iframe class="erp" src="preview-erp.html" title="ERP con resaltado"></iframe>
+      <aside class="chrome-side">
+        <div class="toolbar-mock">
+          Acceso rápido
+          <img src="../../icons/toolbar-32.png" alt="Icono de acceso rápido" />
+        </div>
+        <div class="popup-frame">
+          <iframe src="preview-popup.html" title="Popup Legacy UX Helper"></iframe>
+        </div>
+      </aside>
+    </div>
+  </body>
+</html>

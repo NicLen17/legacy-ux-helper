@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Legacy UX Helper</title>
+    <link rel="stylesheet" href="../../shared/ui.css" />
+    <style>
+      body { width: 360px; padding: 16px; overflow-x: hidden; overflow-y: visible; background: #f8fafc; }
+      .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+      .header h1 { font-size: 1rem; }
+      .status-pill { font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 999px; background: #e2e8f0; color: #475569; }
+      .status-pill.on { background: #dbeafe; color: #1d4ed8; }
+      .section { margin-bottom: 16px; overflow: visible; }
+      .section-title { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+      .shortcut-hint { font-size: 0.75rem; color: #64748b; background: #f1f5f9; border-radius: 8px; padding: 8px 10px; margin-bottom: 14px; }
+      kbd { display: inline-block; padding: 2px 6px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; font-size: 0.7rem; font-family: ui-monospace, Menlo, monospace; }
+      .segmented-3 button {
+        height: 40px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+      .segmented-3 button.active { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
+      .quick-toggles { display: grid; gap: 12px; overflow: visible; }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand">
+        <img class="brand-logo" src="../../icons/app-48.png" alt="" width="32" height="32" />
+        <h1>Legacy UX Helper</h1>
+      </div>
+      <span id="status-pill" class="status-pill on">ON</span>
+    </header>
+    <p class="shortcut-hint">Atajo: <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>H</kbd></p>
+    <section class="section">
+      <button class="btn btn-primary" type="button" style="width: 100%">Desactivar resaltado</button>
+    </section>
+    <section class="section">
+      <div class="section-title">Modo</div>
+      <div class="segmented-3">
+        <button type="button" class="active">Todos</button>
+        <button type="button">Legacy</button>
+        <button type="button">Hover</button>
+      </div>
+    </section>
+    <section class="section quick-toggles">
+      <div class="toggle-row">
+        <div class="toggle-label"><strong>Entrenamiento</strong></div>
+        <label class="switch"><input type="checkbox" /><span class="switch-slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-label"><strong>Indicador flotante</strong></div>
+        <label class="switch"><input type="checkbox" checked /><span class="switch-slider"></span></label>
+      </div>
+    </section>
+    <footer>
+      <a class="btn btn-secondary" href="#" style="width: 100%; text-align: center">Configuración</a>
+    </footer>
+  </body>
+</html>
