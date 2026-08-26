@@ -29,7 +29,12 @@ Legacy UX Helper **no recopila, transmite ni vende datos personales**. Toda la c
 |---------|--------|
 | `storage` | Guardar preferencias localmente |
 | `activeTab` | Alternar el resaltado en la pestaña activa cuando usás el popup o el atajo |
+| `scripting` | Inyectar el CSS/JS de resaltado en la pestaña activa si todavía no estaba cargado |
 | Content scripts (`<all_urls>`) | Analizar el DOM visible para resaltar elementos accionables |
+
+## Resaltado
+
+El resaltado es **CSS inyectado localmente** en la página activa. No modifica el HTML ni envía información a servidores externos. Al desactivar la extensión, los estilos dejan de aplicarse.
 
 ## Exportar / Importar
 

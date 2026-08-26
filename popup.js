@@ -1,8 +1,14 @@
 const toggleBtn = document.getElementById("toggle-btn");
+const toggleError = document.getElementById("toggle-error");
 const statusPill = document.getElementById("status-pill");
-const modeButtons = document.querySelectorAll("#mode-segmented button");
+const modeButtons = document.querySelectorAll("#mode-segmented [data-mode]");
 const trainingToggle = document.getElementById("training-toggle");
 const indicatorToggle = document.getElementById("indicator-toggle");
+
+function showToggleError(message) {
+  toggleError.textContent = message || "";
+  toggleError.classList.toggle("is-visible", Boolean(message));
+}
 
 function updateToggleUi(isActive) {
   statusPill.textContent = isActive ? "ON" : "OFF";
@@ -40,9 +46,16 @@ async function loadPopupState() {
 }
 
 toggleBtn.addEventListener("click", () => {
+  showToggleError("");
   chrome.runtime.sendMessage({ action: "popup_toggle" }, (response) => {
-    if (response?.status === "success") {
-      updateToggleUi(Boolean(response.state));
+    if (chrome.runtime.lastError) {
+      showToggleError("No se pudo comunicar con la extensión. Recargala en chrome://extensions.");
+      return;
+    }
+
+    updateToggleUi(Boolean(response?.state));
+    if (response?.status !== "success") {
+      showToggleError(response?.error || "No se pudo activar el resaltado.");
     }
   });
 });

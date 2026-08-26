@@ -1,8 +1,10 @@
 # Legacy UX Helper
 
+<img src="icons/app-128.png" alt="Legacy UX Helper" width="128" height="128" />
+
 Repositorio: [github.com/NicLen17/legacy-ux-helper](https://github.com/NicLen17/legacy-ux-helper)
 
-Extensión Chrome (Manifest V3) que resalta elementos interactivos en interfaces web legacy **sin alterar el layout**. Funciona **100% en local**, con permisos mínimos.
+Extensión Chrome (Manifest V3) que **resalta** elementos interactivos en interfaces web legacy **sin alterar el layout**. Funciona **100% en local**, con permisos mínimos.
 
 ## Características
 
@@ -11,10 +13,11 @@ Extensión Chrome (Manifest V3) que resalta elementos interactivos en interfaces
 - Modos: **Todos** / **Solo legacy** / **Guía hover**
 - Modo entrenamiento con etiquetas ("Botón", "Enlace", etc.)
 - Estilos configurables: grosor, estilo de borde, glow
-- Presets de accesibilidad
+- Presets de accesibilidad para resaltado
 - Exclusiones y selectores CSS custom (globales, sin guardar dominios)
-- Exportar / Importar configuración JSON (archivo local)
+- Exportar / Importar configuración JSON (archivo local, versión 1.4)
 - Indicador flotante, Shadow DOM, optimizaciones de rendimiento
+- Ayuda contextual (icono *i*) en popup y página de opciones
 
 ## Privacidad y permisos
 
@@ -22,8 +25,11 @@ Extensión Chrome (Manifest V3) que resalta elementos interactivos en interfaces
 |---------|-----|
 | `storage` | Preferencias en `chrome.storage.local` |
 | `activeTab` | Toggle en la pestaña activa (popup / atajo) |
+| `scripting` | Inyectar el resaltado en la pestaña activa si el content script aún no está cargado |
 
-**No se usa:** `tabs`, `scripting`, sincronización en la nube, reglas por dominio ni estadísticas de navegación.
+**No se usa:** `tabs`, sincronización en la nube, reglas por dominio ni estadísticas de navegación.
+
+El resaltado es CSS local sobre la página activa. No modifica el HTML ni envía información a servidores.
 
 Ver [PRIVACY.md](PRIVACY.md).
 
@@ -39,7 +45,8 @@ Ver [PRIVACY.md](PRIVACY.md).
 
 1. Navegá a cualquier página web
 2. Clic en el icono → **Activar resaltado** (o `Alt+Shift+H`)
-3. Configuración avanzada: clic derecho en el icono → **Opciones**
+3. Elegí el modo en el popup: **Todos**, **Solo legacy** o **Guía hover**
+4. Configuración: clic derecho en el icono → **Opciones**
 
 Probá también con `test-page.html` incluido en el repo.
 
@@ -53,11 +60,24 @@ Probá también con `test-page.html` incluido en el repo.
 ├── popup.html / popup.js
 ├── options.html / options.js
 ├── shared/settings.js / ui.css
-├── icons/
+├── assets/app-identifier.jpg
+├── assets/toolbar-icon.jpg
+├── icons/app-*.png          # identificador (Web Store, chrome://extensions)
+├── icons/toolbar-*.png      # icono de acceso rápido (toolbar)
+├── docs/linkedin-post-v1.4.md
 ├── test-page.html
 ├── PRIVACY.md
 └── README.md
 ```
+
+## Identidad visual
+
+| Uso | Origen | Archivos |
+|-----|--------|----------|
+| Identificador de la app (Chrome Web Store, `chrome://extensions`, favicon) | `assets/app-identifier.jpg` | `icons/app-16.png` … `icons/app-128.png` |
+| Icono de acceso rápido (toolbar) | `assets/toolbar-icon.jpg` | `icons/toolbar-16.png` … `icons/toolbar-128.png` |
+
+Para regenerar los PNG en Windows: `node scripts/generate-icons.js`.
 
 ---
 
@@ -67,7 +87,7 @@ Probá también con `test-page.html` incluido en el repo.
 
 1. Cuenta de [Google Chrome Web Store Developer](https://chrome.google.com/webstore/devconsole) (pago único de registro)
 2. Extensión probada y funcionando en modo desarrollador
-3. Iconos en 128×128 px (incluidos en `icons/`)
+3. Iconos en 128×128 px: identificador `icons/app-128.png` e icono de toolbar `icons/toolbar-128.png`
 4. Política de privacidad pública (usá `PRIVACY.md` en GitHub Pages o en el repo)
 
 ### Paso 1: Preparar el paquete ZIP
@@ -77,8 +97,8 @@ Desde la carpeta del proyecto, incluí **solo** los archivos de la extensión (n
 **Windows (PowerShell):**
 
 ```powershell
-cd "c:\Users\Nic Len\Desktop\PROYECTOS\Extencion"
-Compress-Archive -Path manifest.json,background.js,content.js,styles.css,popup.html,popup.js,options.html,options.js,shared,icons,test-page.html,PRIVACY.md -DestinationPath legacy-ux-helper.zip -Force
+cd "c:\Users\Wako\Desktop\Proyectos\legacy-ux-helper"
+Compress-Archive -Path manifest.json,background.js,content.js,styles.css,popup.html,popup.js,options.html,options.js,shared,icons,PRIVACY.md -DestinationPath legacy-ux-helper.zip -Force
 ```
 
 **macOS / Linux:**
@@ -87,7 +107,7 @@ Compress-Archive -Path manifest.json,background.js,content.js,styles.css,popup.h
 zip -r legacy-ux-helper.zip manifest.json background.js content.js styles.css popup.html popup.js options.html options.js shared icons PRIVACY.md -x "*.git*"
 ```
 
-> `test-page.html` es opcional en el ZIP de producción; no es necesario para la store.
+> `test-page.html` y `docs/` son opcionales en el ZIP de producción; no son necesarios para la store.
 
 ### Paso 2: Subir a Chrome Web Store
 
@@ -96,11 +116,29 @@ zip -r legacy-ux-helper.zip manifest.json background.js content.js styles.css po
 3. Subí `legacy-ux-helper.zip`
 4. Completá la ficha:
    - **Nombre:** Legacy UX Helper
-   - **Descripción corta:** Resalta elementos accionables en sistemas legacy sin alterar el layout
-   - **Descripción detallada:** Explicá modos, colores por tipo, privacidad local
-   - **Categoría:** Productivity / Accessibility
-   - **Screenshots:** Mínimo 1 (1280×800 recomendado) mostrando el resaltado activo
-   - **Icono:** `icons/icon128.png`
+   - **Descripción corta:** Resalta elementos accionables en UIs legacy. 100% local.
+   - **Descripción detallada:** (ver copy abajo)
+   - **Categoría:** Productivity
+   - **Screenshots:** Mínimo 1 (1280×800 recomendado) mostrando el resaltado en una UI legacy
+   - **Icono:** `icons/app-128.png` (identificador de la app; el de acceso rápido en la toolbar es `icons/toolbar-128.png`)
+
+#### Copy para la ficha (Chrome Web Store)
+
+**Short description:**
+Resalta elementos accionables en UIs legacy. 100% local.
+
+**Long description (idea):**
+Resalta qué es clickeable en pantallas legacy **sin cambiar el layout**.
+
+Tres modos:
+
+1. **Todos** — outlines y glow por tipo (botones, enlaces, inputs, legacy onclick, tablas clickeables).
+2. **Solo legacy** — únicamente controles no semánticos (cursor pointer, onclick, tablas).
+3. **Guía hover** — resalta solo el elemento sobre el que pasás el mouse.
+
+Incluye presets de accesibilidad, modo entrenamiento, exclusiones CSS y exportación de configuración.
+
+**100% local.** Sin cloud, sin analytics, sin reglas por dominio. Permisos: `storage`, `activeTab` y `scripting`.
 
 ### Paso 3: Privacidad y permisos
 
@@ -108,7 +146,7 @@ En el formulario de privacidad de la store:
 
 - **Recopila datos personales:** No
 - **Política de privacidad:** [PRIVACY.md](https://github.com/NicLen17/legacy-ux-helper/blob/master/PRIVACY.md)
-- **Permisos:** Justificá `storage` (preferencias locales) y `activeTab` (toggle en pestaña activa)
+- **Permisos:** Justificá `storage` (preferencias locales), `activeTab` (toggle en pestaña activa) y `scripting` (inyectar el resaltado en esa pestaña)
 - **Host permissions:** Ninguno adicional (content scripts declarados en manifest)
 
 ### Paso 4: Revisión y publicación
@@ -120,7 +158,7 @@ En el formulario de privacidad de la store:
 
 ### Paso 5: Actualizaciones futuras
 
-1. Incrementá `"version"` en `manifest.json` (ej. `1.3.1` → `1.4.0`)
+1. Incrementá `"version"` en `manifest.json` (ej. `1.4.0` → `1.4.1`)
 2. Generá un nuevo ZIP
 3. En el dashboard → tu extensión → **Package** → subí el nuevo ZIP
 4. Enviá a revisión
@@ -131,9 +169,10 @@ En el formulario de privacidad de la store:
 
 ```bash
 node scripts/verify-extension.js
+node scripts/generate-icons.js
 ```
 
-Verifica estructura, permisos mínimos y restricciones de CSS.
+`verify-extension.js` comprueba estructura, permisos mínimos, modos de resaltado e iconos. `generate-icons.js` regenera los PNG desde `assets/` (Windows).
 
 ## Licencia
 

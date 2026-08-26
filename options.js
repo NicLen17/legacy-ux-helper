@@ -2,7 +2,7 @@ const optionsForm = document.getElementById("options-form");
 const colorGrid = document.getElementById("color-grid");
 const previewGrid = document.getElementById("preview-grid");
 const presetRow = document.getElementById("preset-row");
-const modeButtons = document.querySelectorAll("#mode-segmented button");
+const modeButtons = document.querySelectorAll("#mode-segmented [data-mode]");
 const globalExclusionsInput = document.getElementById("global-exclusions");
 const customSelectorsInput = document.getElementById("custom-selectors");
 const resetBtn = document.getElementById("reset-btn");
@@ -161,6 +161,15 @@ function validateSettings(settings) {
   return true;
 }
 
+function bindDraftFromForm() {
+  globalExclusionsInput.value = draftSettings.globalExclusions;
+  customSelectorsInput.value = draftSettings.customSelectors;
+  updateModeUi(draftSettings.mode);
+  bindAppearanceControls();
+  bindFeatureControls();
+  renderColorGrid();
+}
+
 modeButtons.forEach((button) => {
   button.addEventListener("click", () => {
     draftSettings.mode = button.dataset.mode;
@@ -197,12 +206,7 @@ optionsForm.addEventListener("submit", async (event) => {
 
 resetBtn.addEventListener("click", async () => {
   draftSettings = LegacyUxSettings.mergeWithDefaults({});
-  globalExclusionsInput.value = draftSettings.globalExclusions;
-  customSelectorsInput.value = draftSettings.customSelectors;
-  updateModeUi(draftSettings.mode);
-  bindAppearanceControls();
-  bindFeatureControls();
-  renderColorGrid();
+  bindDraftFromForm();
   try {
     await LegacyUxSettings.save(draftSettings);
     showStatus("Configuración restablecida.");
@@ -230,12 +234,7 @@ importInput.addEventListener("change", async () => {
   if (!file) return;
   try {
     draftSettings = LegacyUxSettings.importFromJson(await file.text());
-    globalExclusionsInput.value = draftSettings.globalExclusions;
-    customSelectorsInput.value = draftSettings.customSelectors;
-    updateModeUi(draftSettings.mode);
-    bindAppearanceControls();
-    bindFeatureControls();
-    renderColorGrid();
+    bindDraftFromForm();
     await LegacyUxSettings.save(draftSettings);
     showStatus("Configuración importada correctamente.");
   } catch {
@@ -246,14 +245,25 @@ importInput.addEventListener("change", async () => {
 });
 
 async function init() {
-  draftSettings = await LegacyUxSettings.load();
-  globalExclusionsInput.value = draftSettings.globalExclusions;
-  customSelectorsInput.value = draftSettings.customSelectors;
-  updateModeUi(draftSettings.mode);
-  bindAppearanceControls();
-  bindFeatureControls();
+  try {
+    draftSettings = await LegacyUxSettings.load();
+  } catch {
+    draftSettings = LegacyUxSettings.mergeWithDefaults({});
+  }
+  bindDraftFromForm();
   renderPresets();
-  renderColorGrid();
+}
+
+const advancedToggle = document.getElementById("advanced-toggle");
+const advancedPanel = document.getElementById("advanced-panel");
+
+if (advancedToggle && advancedPanel) {
+  advancedToggle.addEventListener("click", () => {
+    const willOpen = advancedPanel.hasAttribute("hidden");
+    advancedPanel.toggleAttribute("hidden", !willOpen);
+    advancedToggle.setAttribute("aria-expanded", String(willOpen));
+    advancedToggle.classList.toggle("is-open", willOpen);
+  });
 }
 
 init();

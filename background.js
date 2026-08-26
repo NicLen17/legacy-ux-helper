@@ -4,6 +4,16 @@ function getTabStateKey(tabId) {
   return `${TAB_STATE_PREFIX}${tabId}`;
 }
 
+function isRestrictedUrl(url) {
+  if (!url) {
+    return true;
+  }
+
+  return /^(chrome|chrome-extension|edge|about|devtools|moz-extension):/i.test(url)
+    || url.startsWith("https://chrome.google.com/webstore")
+    || url.startsWith("https://chromewebstore.google.com");
+}
+
 async function setTabBadge(tabId, isActive) {
   await chrome.action.setBadgeText({
     tabId,
@@ -32,7 +42,50 @@ async function saveTabState(tabId, isActive) {
   await chrome.storage.session.set({ [key]: isActive });
 }
 
+async function pingContentScript(tabId) {
+  try {
+    return await chrome.tabs.sendMessage(tabId, { action: "get_state" });
+  } catch {
+    return null;
+  }
+}
+
+async function injectContentScript(tabId) {
+  try {
+    await chrome.scripting.insertCSS({
+      target: { tabId, allFrames: true },
+      files: ["styles.css"],
+    });
+  } catch {
+    // El CSS ya puede estar inyectado por el content_script del manifest.
+  }
+
+  await chrome.scripting.executeScript({
+    target: { tabId, allFrames: true },
+    files: ["shared/settings.js", "content.js"],
+  });
+}
+
+async function ensureContentScript(tabId) {
+  if (await pingContentScript(tabId)) {
+    return true;
+  }
+
+  try {
+    await injectContentScript(tabId);
+    return Boolean(await pingContentScript(tabId));
+  } catch (error) {
+    console.warn("Legacy UX Helper: no se pudo inyectar el content script.", error);
+    return false;
+  }
+}
+
 async function toggleHighlightInTab(tabId) {
+  const ready = await ensureContentScript(tabId);
+  if (!ready) {
+    return { ok: false, state: false, error: "Recargá esta pestaña e intentá de nuevo. No se puede resaltar esta página." };
+  }
+
   try {
     const response = await chrome.tabs.sendMessage(tabId, {
       action: "toggle_highlight",
@@ -42,26 +95,21 @@ async function toggleHighlightInTab(tabId) {
       const isActive = Boolean(response.state);
       await saveTabState(tabId, isActive);
       await setTabBadge(tabId, isActive);
-      return isActive;
+      return { ok: true, state: isActive };
     }
-  } catch {
-    console.warn(
-      "Legacy UX Helper: No se pudo comunicar con la pestaña. Puede ser una página restringida."
-    );
+  } catch (error) {
+    console.warn("Legacy UX Helper: no se pudo comunicar con la pestaña.", error);
   }
 
-  return false;
+  return { ok: false, state: false, error: "No se pudo activar el resaltado en esta pestaña." };
 }
 
 async function getHighlightStateFromTab(tabId) {
-  try {
-    const response = await chrome.tabs.sendMessage(tabId, {
-      action: "get_state",
-    });
-    return Boolean(response?.state);
-  } catch {
-    return getTabState(tabId);
+  const response = await pingContentScript(tabId);
+  if (response) {
+    return Boolean(response.state);
   }
+  return getTabState(tabId);
 }
 
 chrome.commands.onCommand.addListener(async (command) => {
@@ -74,6 +122,10 @@ chrome.commands.onCommand.addListener(async (command) => {
     return;
   }
 
+  if (isRestrictedUrl(tab.url)) {
+    return;
+  }
+
   await toggleHighlightInTab(tab.id);
 });
 
@@ -81,12 +133,25 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   if (request.action === "popup_toggle") {
     chrome.tabs.query({ active: true, currentWindow: true }, async ([tab]) => {
       if (!tab?.id) {
-        sendResponse({ status: "error", state: false });
+        sendResponse({ status: "error", state: false, error: "No hay una pestaña activa." });
         return;
       }
 
-      const state = await toggleHighlightInTab(tab.id);
-      sendResponse({ status: "success", state });
+      if (isRestrictedUrl(tab.url)) {
+        sendResponse({
+          status: "error",
+          state: false,
+          error: "Esta página no permite extensiones. Abrí un sitio http/https.",
+        });
+        return;
+      }
+
+      const result = await toggleHighlightInTab(tab.id);
+      sendResponse({
+        status: result.ok ? "success" : "error",
+        state: result.state,
+        error: result.error,
+      });
     });
     return true;
   }

@@ -2,7 +2,7 @@
 const LegacyUxSettings = (() => {
   const STORAGE_KEY = "userSettings";
   const LEGACY_COLOR_KEY = "highlightColor";
-  const EXPORT_VERSION = "1.3";
+  const EXPORT_VERSION = "1.4";
 
   const DEFAULT_COLORS = {
     button: "#22c55e",
@@ -38,6 +38,12 @@ const LegacyUxSettings = (() => {
     legacy: "Acción legacy",
     custom: "Selector custom",
     table: "Celda/fila clickeable",
+  };
+
+  const MODE_LABELS = {
+    all: "Todos",
+    legacy: "Legacy",
+    hover: "Hover",
   };
 
   const PRESETS = {
@@ -105,11 +111,90 @@ const LegacyUxSettings = (() => {
     pauseWhenHidden: true,
   };
 
+  const DEFAULT_MODERNIZE = {
+    preset: "minimal",
+    intensity: "soft",
+    pageShell: false,
+  };
+
+  const MODERNIZE_PRESETS = {
+    minimal: {
+      name: "Minimal",
+      tokens: {
+        radius: "6px",
+        font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+        surface: "#f8fafc",
+        surfaceBorder: "#e2e8f0",
+        text: "#0f172a",
+        shadow: "0 1px 3px rgba(15, 23, 42, 0.12)",
+        shadowStrong: "0 2px 8px rgba(15, 23, 42, 0.2)",
+        paddingY: "6px",
+        paddingX: "12px",
+        accentButton: "#2563eb",
+        accentLink: "#2563eb",
+        accentInput: "#ffffff",
+        accentSelect: "#ffffff",
+        accentTextarea: "#ffffff",
+        accentAria: "#7c3aed",
+        accentLegacy: "#dc2626",
+        accentCustom: "#0d9488",
+        accentTable: "#9333ea",
+      },
+    },
+    enterprise: {
+      name: "Enterprise",
+      tokens: {
+        radius: "4px",
+        font: '"Segoe UI", system-ui, -apple-system, Roboto, sans-serif',
+        surface: "#f1f5f9",
+        surfaceBorder: "#cbd5e1",
+        text: "#1e293b",
+        shadow: "0 1px 2px rgba(15, 23, 42, 0.08)",
+        shadowStrong: "0 3px 10px rgba(15, 23, 42, 0.15)",
+        paddingY: "5px",
+        paddingX: "10px",
+        accentButton: "#1e40af",
+        accentLink: "#1d4ed8",
+        accentInput: "#ffffff",
+        accentSelect: "#ffffff",
+        accentTextarea: "#ffffff",
+        accentAria: "#5b21b6",
+        accentLegacy: "#b91c1c",
+        accentCustom: "#0f766e",
+        accentTable: "#7e22ce",
+      },
+    },
+    highContrast: {
+      name: "Alto contraste",
+      tokens: {
+        radius: "8px",
+        font: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+        surface: "#ffffff",
+        surfaceBorder: "#000000",
+        text: "#000000",
+        shadow: "0 0 0 2px #000000",
+        shadowStrong: "0 0 0 3px #000000",
+        paddingY: "8px",
+        paddingX: "14px",
+        accentButton: "#00ff00",
+        accentLink: "#00bfff",
+        accentInput: "#ffff00",
+        accentSelect: "#ff00ff",
+        accentTextarea: "#00ffff",
+        accentAria: "#ff6600",
+        accentLegacy: "#ff0000",
+        accentCustom: "#ffffff",
+        accentTable: "#ffcc00",
+      },
+    },
+  };
+
   const DEFAULTS = {
     mode: "all",
     colors: { ...DEFAULT_COLORS },
     appearance: { ...DEFAULT_APPEARANCE },
     features: { ...DEFAULT_FEATURES },
+    modernize: { ...DEFAULT_MODERNIZE },
     globalExclusions: "[aria-hidden='true']",
     customSelectors: "",
   };
@@ -162,11 +247,18 @@ const LegacyUxSettings = (() => {
       ),
       outlineOffset: Math.min(
         8,
-        Math.max(0, Number(partial.outlineOffset) || DEFAULT_APPEARANCE.outlineOffset)
+        Math.max(0, Number.isFinite(Number(partial.outlineOffset))
+          ? Number(partial.outlineOffset)
+          : DEFAULT_APPEARANCE.outlineOffset)
       ),
       glowIntensity: Math.min(
         1,
-        Math.max(0, Number(partial.glowIntensity) ?? DEFAULT_APPEARANCE.glowIntensity)
+        Math.max(
+          0,
+          Number.isFinite(Number(partial.glowIntensity))
+            ? Number(partial.glowIntensity)
+            : DEFAULT_APPEARANCE.glowIntensity
+        )
       ),
       glowEnabled:
         typeof partial.glowEnabled === "boolean"
@@ -202,6 +294,25 @@ const LegacyUxSettings = (() => {
     };
   }
 
+  function normalizeModernize(modernize) {
+    const partial = typeof modernize === "object" && modernize !== null ? modernize : {};
+    const preset = Object.keys(MODERNIZE_PRESETS).includes(partial.preset)
+      ? partial.preset
+      : DEFAULT_MODERNIZE.preset;
+    const intensity = ["soft", "strong"].includes(partial.intensity)
+      ? partial.intensity
+      : DEFAULT_MODERNIZE.intensity;
+
+    return {
+      preset,
+      intensity,
+      pageShell:
+        typeof partial.pageShell === "boolean"
+          ? partial.pageShell
+          : DEFAULT_MODERNIZE.pageShell,
+    };
+  }
+
   function mergeWithDefaults(value) {
     const partial = typeof value === "object" && value !== null ? value : {};
     const colors = {
@@ -222,6 +333,7 @@ const LegacyUxSettings = (() => {
       colors,
       appearance: normalizeAppearance(partial.appearance),
       features: normalizeFeatures(partial.features),
+      modernize: normalizeModernize(partial.modernize),
       globalExclusions:
         typeof partial.globalExclusions === "string"
           ? partial.globalExclusions
@@ -311,6 +423,35 @@ const LegacyUxSettings = (() => {
     });
   }
 
+  function applyModernizePreset(presetKey, currentSettings) {
+    const preset = MODERNIZE_PRESETS[presetKey];
+    if (!preset) {
+      return mergeWithDefaults(currentSettings);
+    }
+
+    return mergeWithDefaults({
+      ...currentSettings,
+      modernize: {
+        ...normalizeModernize(currentSettings?.modernize),
+        preset: presetKey,
+      },
+    });
+  }
+
+  function getModernizeTokens(modernizeSettings) {
+    const normalized = normalizeModernize(modernizeSettings);
+    const preset = MODERNIZE_PRESETS[normalized.preset] || MODERNIZE_PRESETS.minimal;
+    const tokens = { ...preset.tokens };
+
+    if (normalized.intensity === "strong") {
+      tokens.shadow = tokens.shadowStrong;
+      tokens.paddingY = `${parseInt(tokens.paddingY, 10) + 2}px`;
+      tokens.paddingX = `${parseInt(tokens.paddingX, 10) + 2}px`;
+    }
+
+    return tokens;
+  }
+
   function parseSelectors(selectors) {
     return selectors
       .split(/[\n,]/)
@@ -336,9 +477,12 @@ const LegacyUxSettings = (() => {
     EXPORT_VERSION,
     DEFAULTS,
     DEFAULT_COLORS,
+    DEFAULT_MODERNIZE,
     COLOR_LABELS,
     TYPE_LABELS,
+    MODE_LABELS,
     PRESETS,
+    MODERNIZE_PRESETS,
     isValidHex,
     normalizeHex,
     hexToRgba,
@@ -348,6 +492,8 @@ const LegacyUxSettings = (() => {
     exportToJson,
     importFromJson,
     applyPreset,
+    applyModernizePreset,
+    getModernizeTokens,
     parseSelectors,
     areSelectorsSafe,
   };

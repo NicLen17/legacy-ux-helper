@@ -4,148 +4,542 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Legacy UX Helper — Configuración</title>
+    <link rel="icon" type="image/png" href="icons/app-48.png" />
     <link rel="stylesheet" href="shared/ui.css" />
     <style>
-      body { min-height: 100vh; padding: 24px; }
-      .layout { max-width: 760px; margin: 0 auto; display: grid; gap: 16px; }
-      .card { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08); }
-      .card h1 { font-size: 1.35rem; margin-bottom: 6px; }
-      .card > p { color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 16px; }
-      .card h2 { font-size: 1rem; margin-bottom: 10px; }
-      .preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-top: 12px; }
-      .preview-chip { padding: 10px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; text-align: center; font-size: 0.75rem; font-weight: 600; }
-      .preview-chip span { display: inline-block; margin-top: 8px; padding: 6px 10px; border-radius: 6px; background: #e2e8f0; }
-      .appearance-grid { border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; background: #f8fafc; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-      .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-      .preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-      .preset-btn { height: 34px; padding: 0 12px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.8rem; font-weight: 600; }
-      .preset-btn:hover { background: #eff6ff; border-color: #93c5fd; }
-      .range-row label { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
-      .segmented-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-      .segmented-3 button { height: 36px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.78rem; font-weight: 600; }
-      .segmented-3 button.active { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
-      #import-input { display: none; }
-      .privacy-note { font-size: 0.8rem; color: #64748b; background: #f1f5f9; border-radius: 8px; padding: 10px 12px; }
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        overflow: hidden;
+      }
+
+      .page-shell {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+
+      .layout {
+        flex: 1;
+        overflow-y: auto;
+        width: 100%;
+        padding: 28px 24px 24px;
+      }
+
+      .layout-inner {
+        max-width: 760px;
+        margin: 0 auto;
+        display: grid;
+        gap: 24px;
+      }
+
+      #options-form {
+        display: grid;
+        gap: 24px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+      }
+
+      .card h1 {
+        font-size: 1.35rem;
+        margin-bottom: 8px;
+      }
+
+      .card > p,
+      .card-intro {
+        color: #64748b;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .card h2 {
+        font-size: 1.05rem;
+        margin-bottom: 6px;
+      }
+
+      .section-kicker {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 8px 0 0;
+      }
+
+      .section-kicker h2 {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #64748b;
+      }
+
+      .block + .block {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .block-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .preview-chip {
+        padding: 12px;
+        border-radius: 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .preview-chip span {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        background: #e2e8f0;
+      }
+
+      .appearance-grid {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px;
+        background: #f8fafc;
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      .preset-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .preset-btn {
+        height: 36px;
+        padding: 0 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 999px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .preset-btn:hover {
+        background: #eff6ff;
+        border-color: #93c5fd;
+      }
+
+      .range-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .range-row input[type="range"] {
+        width: 100%;
+      }
+
+      .field-stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      #import-input {
+        display: none;
+      }
+
+      .privacy-note {
+        font-size: 0.8rem;
+        color: #64748b;
+        background: #f1f5f9;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-top: 16px;
+      }
+
+      .advanced-wrap {
+        display: grid;
+        gap: 16px;
+        margin-top: 8px;
+      }
+
+      .advanced-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        width: 100%;
+        text-align: left;
+        border: none;
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      .advanced-summary h2 {
+        margin-bottom: 4px;
+      }
+
+      .advanced-summary p {
+        color: #64748b;
+        font-size: 0.85rem;
+        line-height: 1.45;
+      }
+
+      .chevron {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: #f1f5f9;
+        color: #334155;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        transition: transform 0.2s ease;
+      }
+
+      .advanced-summary.is-open .chevron,
+      .advanced-summary[aria-expanded="true"] .chevron {
+        transform: rotate(180deg);
+      }
+
+      .advanced-stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .advanced-stack[hidden] {
+        display: none;
+      }
+
+      .options-footer {
+        flex-shrink: 0;
+        position: sticky;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid #e2e8f0;
+        box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.06);
+        padding: 14px 24px 16px;
+      }
+
+      .footer-inner {
+        width: 100%;
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+        gap: 12px;
+        width: 100%;
+      }
+
+      .footer-actions .btn {
+        width: 100%;
+        height: 44px;
+      }
+
+      .footer-inner .status {
+        min-height: 1.1em;
+        text-align: right;
+      }
     </style>
   </head>
   <body>
-    <main class="layout">
-      <section class="card">
-        <h1>Legacy UX Helper</h1>
-        <p>
-          Configuración 100% local. No se guardan dominios, URLs ni historial de navegación.
-          Solo preferencias de resaltado en tu navegador.
-        </p>
-        <p class="privacy-note">
-          Almacenamiento: <code>chrome.storage.local</code> · Permisos mínimos: <code>storage</code> y <code>activeTab</code>
-        </p>
-      </section>
-
-      <form id="options-form">
-        <section class="card">
-          <h2>Presets de accesibilidad</h2>
-          <div class="preset-row" id="preset-row"></div>
-        </section>
-
-        <section class="card">
-          <h2>Colores por tipo de elemento</h2>
-          <div id="color-grid" class="color-grid"></div>
-          <div class="preview-grid" id="preview-grid"></div>
-        </section>
-
-        <section class="card">
-          <h2>Estilo visual</h2>
-          <div class="appearance-grid">
-            <div>
-              <label class="field-label" for="outline-style">Estilo de borde</label>
-              <select id="outline-style" class="text-input">
-                <option value="dashed">Punteado</option>
-                <option value="solid">Sólido</option>
-                <option value="dotted">Puntos</option>
-              </select>
+    <div class="page-shell">
+      <main class="layout">
+        <div class="layout-inner">
+          <section class="card">
+            <div class="brand brand--page">
+              <img class="brand-logo brand-logo--lg" src="icons/app-128.png" alt="" width="64" height="64" />
+              <div class="brand-copy">
+                <h1>Legacy UX Helper</h1>
+                <p>
+                  Configuración 100% local. No se guardan dominios, URLs ni historial de navegación.
+                  Solo preferencias de resaltado en tu navegador.
+                </p>
+              </div>
             </div>
-            <div class="range-row">
-              <label for="outline-width">Grosor <span id="outline-width-value">2px</span></label>
-              <input id="outline-width" type="range" min="1" max="6" step="1" />
-            </div>
-            <div class="range-row">
-              <label for="outline-offset">Separación <span id="outline-offset-value">2px</span></label>
-              <input id="outline-offset" type="range" min="0" max="8" step="1" />
-            </div>
-            <div class="range-row">
-              <label for="glow-intensity">Intensidad glow <span id="glow-intensity-value">40%</span></label>
-              <input id="glow-intensity" type="range" min="0" max="100" step="5" />
-            </div>
-          </div>
-          <div class="toggle-row" style="margin-top: 12px">
-            <div><strong>Activar glow (sombra)</strong></div>
-            <label class="switch"><input id="glow-enabled" type="checkbox" /><span class="switch-slider"></span></label>
-          </div>
-        </section>
+            <p class="privacy-note">
+              Almacenamiento: <code>chrome.storage.local</code> · Permisos mínimos: <code>storage</code> y <code>activeTab</code>
+            </p>
+          </section>
 
-        <section class="card">
-          <h2>Modos y funciones</h2>
-          <div class="field-label">Modo de resaltado</div>
-          <div class="segmented-3" id="mode-segmented">
-            <button type="button" data-mode="all" class="active">Todos</button>
-            <button type="button" data-mode="legacy">Solo legacy</button>
-            <button type="button" data-mode="hover">Guía hover</button>
-          </div>
-
-          <div class="color-grid" style="margin-top: 12px">
-            <div class="toggle-row">
-              <div><strong>Modo entrenamiento</strong></div>
-              <label class="switch"><input id="training-mode" type="checkbox" /><span class="switch-slider"></span></label>
+          <form id="options-form">
+            <div class="section-kicker">
+              <h2>Configuración general</h2>
             </div>
-            <div class="toggle-row">
-              <div><strong>Indicador flotante</strong></div>
-              <label class="switch"><input id="floating-indicator" type="checkbox" /><span class="switch-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div><strong>Escanear Shadow DOM</strong></div>
-              <label class="switch"><input id="scan-shadow-dom" type="checkbox" /><span class="switch-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div><strong>Solo viewport visible</strong></div>
-              <label class="switch"><input id="viewport-only" type="checkbox" /><span class="switch-slider"></span></label>
-            </div>
-            <div class="toggle-row">
-              <div><strong>Pausar si pestaña oculta</strong></div>
-              <label class="switch"><input id="pause-when-hidden" type="checkbox" /><span class="switch-slider"></span></label>
-            </div>
-          </div>
 
-          <div style="margin-top: 16px">
-            <label class="field-label" for="global-exclusions">Exclusiones (selectores CSS)</label>
-            <textarea id="global-exclusions" class="code-input" placeholder="nav a, .decorative-link"></textarea>
-          </div>
+            <section class="card">
+              <div class="block">
+                <div class="block-title">Modo de resaltado</div>
+                <div class="segmented-3" id="mode-segmented">
+                  <button type="button" data-mode="all" class="active">Todos</button>
+                  <button type="button" data-mode="legacy">Solo legacy</button>
+                  <button type="button" data-mode="hover">Guía hover</button>
+                </div>
+              </div>
 
-          <div style="margin-top: 16px">
-            <label class="field-label" for="custom-selectors">Selectores custom (selectores CSS)</label>
-            <textarea id="custom-selectors" class="code-input" placeholder=".btn-guardar, td.action, #btnSubmit"></textarea>
-            <div class="field-hint">Resalta elementos extra en cualquier sitio. No se guarda el dominio visitado.</div>
-          </div>
-        </section>
+              <div class="block">
+                <div class="block-title">
+                  Presets de accesibilidad
+                  <span class="info-tip">
+                    <span class="info-icon" role="img" aria-label="Qué son los presets de accesibilidad">i</span>
+                    <span class="info-overlay" role="tooltip">Aplican de golpe una paleta de colores pensada para contraste, daltonismo o pantallas tipo ERP. Podés seguir ajustando cada color después.</span>
+                  </span>
+                </div>
+                <div class="preset-row" id="preset-row"></div>
+              </div>
 
-        <section class="card">
-          <h2>Exportar / Importar (opcional)</h2>
-          <p>Copia de seguridad local de tu configuración. El archivo JSON se guarda en tu equipo.</p>
-          <div class="actions">
-            <button type="button" id="export-btn" class="btn btn-secondary">Exportar JSON</button>
-            <button type="button" id="import-btn" class="btn btn-secondary">Importar JSON</button>
-            <input id="import-input" type="file" accept="application/json,.json" />
-          </div>
-        </section>
+              <div class="block">
+                <div class="block-title">
+                  Colores por tipo de elemento
+                  <span class="info-tip">
+                    <span class="info-icon" role="img" aria-label="Cómo se usan los colores por tipo">i</span>
+                    <span class="info-overlay" role="tooltip">Cada tipo de control usa un color distinto en el contorno y el glow. Así identificás más rápido botones, enlaces, campos y acciones legacy.</span>
+                  </span>
+                </div>
+                <div id="color-grid" class="color-grid"></div>
+                <div class="preview-grid" id="preview-grid"></div>
+              </div>
 
-        <section class="card">
-          <div class="actions">
-            <button type="submit" class="btn btn-primary">Guardar configuración</button>
-            <button type="button" id="reset-btn" class="btn btn-secondary">Restablecer todo</button>
+              <div class="block">
+                <div class="block-title">Funciones rápidas</div>
+                <div class="toggle-stack">
+                  <div class="toggle-row">
+                    <div class="toggle-label">
+                      <strong>Modo entrenamiento</strong>
+                      <span class="info-tip">
+                        <span class="info-icon" role="img" aria-label="Qué hace el modo entrenamiento">i</span>
+                        <span class="info-overlay" role="tooltip">Muestra una etiqueta con el tipo de cada elemento detectado (Botón, Enlace, etc.) para aprender la interfaz.</span>
+                      </span>
+                    </div>
+                    <label class="switch"><input id="training-mode" type="checkbox" /><span class="switch-slider"></span></label>
+                  </div>
+                  <div class="toggle-row">
+                    <div class="toggle-label">
+                      <strong>Indicador flotante</strong>
+                      <span class="info-tip">
+                        <span class="info-icon" role="img" aria-label="Qué hace el indicador flotante">i</span>
+                        <span class="info-overlay" role="tooltip">Chip en la esquina inferior que confirma que el helper está activo y muestra el modo en uso.</span>
+                      </span>
+                    </div>
+                    <label class="switch"><input id="floating-indicator" type="checkbox" /><span class="switch-slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="block">
+                <div class="block-title">Estilo visual</div>
+                <div class="appearance-grid">
+                  <div>
+                    <div class="label-with-info">
+                      <label class="field-label" for="outline-style">Estilo de borde</label>
+                      <span class="info-tip">
+                        <span class="info-icon" role="img" aria-label="Qué es el estilo de borde">i</span>
+                        <span class="info-overlay" role="tooltip">Define cómo se dibuja el contorno alrededor del elemento: punteado, sólido o con puntos.</span>
+                      </span>
+                    </div>
+                    <select id="outline-style" class="text-input">
+                      <option value="dashed">Punteado</option>
+                      <option value="solid">Sólido</option>
+                      <option value="dotted">Puntos</option>
+                    </select>
+                  </div>
+                  <div class="range-row">
+                    <div class="range-label">
+                      <span class="label-with-info">
+                        <label class="field-label" for="outline-width">Grosor</label>
+                        <span class="info-tip">
+                          <span class="info-icon" role="img" aria-label="Qué es el grosor del borde">i</span>
+                          <span class="info-overlay" role="tooltip">Ancho del contorno en píxeles. Un valor más alto se ve más fácil, pero puede tapar texto chico.</span>
+                        </span>
+                      </span>
+                      <span id="outline-width-value">2px</span>
+                    </div>
+                    <input id="outline-width" type="range" min="1" max="6" step="1" />
+                  </div>
+                  <div class="range-row">
+                    <div class="range-label">
+                      <span class="label-with-info">
+                        <label class="field-label" for="outline-offset">Separación</label>
+                        <span class="info-tip">
+                          <span class="info-icon" role="img" aria-label="Qué es la separación del borde">i</span>
+                          <span class="info-overlay" role="tooltip">Distancia entre el elemento y su contorno. Ayuda a que el resaltado no se pegue al borde del control.</span>
+                        </span>
+                      </span>
+                      <span id="outline-offset-value">2px</span>
+                    </div>
+                    <input id="outline-offset" type="range" min="0" max="8" step="1" />
+                  </div>
+                  <div class="range-row">
+                    <div class="range-label">
+                      <span class="label-with-info">
+                        <label class="field-label" for="glow-intensity">Intensidad glow</label>
+                        <span class="info-tip">
+                          <span class="info-icon" role="img" aria-label="Qué es la intensidad del glow">i</span>
+                          <span class="info-overlay" role="tooltip">Qué tan visible es la sombra de color alrededor del elemento. 0% es sutil; 100% es muy marcado.</span>
+                        </span>
+                      </span>
+                      <span id="glow-intensity-value">40%</span>
+                    </div>
+                    <input id="glow-intensity" type="range" min="0" max="100" step="5" />
+                  </div>
+                </div>
+                <div class="toggle-stack" style="margin-top: 16px">
+                  <div class="toggle-row">
+                    <div class="toggle-label">
+                      <strong>Activar glow (sombra)</strong>
+                      <span class="info-tip">
+                        <span class="info-icon" role="img" aria-label="Qué hace activar el glow">i</span>
+                        <span class="info-overlay" role="tooltip">Enciende o apaga la sombra de color. El contorno sigue visible aunque desactives el glow.</span>
+                      </span>
+                    </div>
+                    <label class="switch"><input id="glow-enabled" type="checkbox" /><span class="switch-slider"></span></label>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="advanced-wrap">
+              <button type="button" class="card advanced-summary" id="advanced-toggle" aria-expanded="false" aria-controls="advanced-panel">
+                <div>
+                  <h2>Configuración avanzada</h2>
+                  <p>Rendimiento, selectores CSS e importación. Cerrado por defecto para no saturar.</p>
+                </div>
+                <span class="chevron" aria-hidden="true">▾</span>
+              </button>
+
+              <div id="advanced-panel" class="advanced-stack" hidden>
+                <section class="card">
+                  <div class="block-title">Rendimiento</div>
+                  <div class="toggle-stack">
+                    <div class="toggle-row">
+                      <div class="toggle-label">
+                        <strong>Escanear Shadow DOM</strong>
+                        <span class="info-tip">
+                          <span class="info-icon" role="img" aria-label="Qué hace escanear Shadow DOM">i</span>
+                          <span class="info-overlay" role="tooltip">Incluye elementos dentro de web components. Desactivalo si la página se pone lenta.</span>
+                        </span>
+                      </div>
+                      <label class="switch"><input id="scan-shadow-dom" type="checkbox" /><span class="switch-slider"></span></label>
+                    </div>
+                    <div class="toggle-row">
+                      <div class="toggle-label">
+                        <strong>Solo viewport visible</strong>
+                        <span class="info-tip">
+                          <span class="info-icon" role="img" aria-label="Qué hace solo viewport visible">i</span>
+                          <span class="info-overlay" role="tooltip">Analiza únicamente lo que está en pantalla. Mejora el rendimiento en listados o grillas muy largas.</span>
+                        </span>
+                      </div>
+                      <label class="switch"><input id="viewport-only" type="checkbox" /><span class="switch-slider"></span></label>
+                    </div>
+                    <div class="toggle-row">
+                      <div class="toggle-label">
+                        <strong>Pausar si pestaña oculta</strong>
+                        <span class="info-tip">
+                          <span class="info-icon" role="img" aria-label="Qué hace pausar si la pestaña está oculta">i</span>
+                          <span class="info-overlay" role="tooltip">Deja de escanear cuando cambiás de pestaña para ahorrar CPU. Se reanuda al volver.</span>
+                        </span>
+                      </div>
+                      <label class="switch"><input id="pause-when-hidden" type="checkbox" /><span class="switch-slider"></span></label>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="card">
+                  <div class="block-title">Selectores CSS</div>
+                  <div class="field-stack">
+                    <div>
+                      <div class="label-with-info">
+                        <label class="field-label" for="global-exclusions">Exclusiones</label>
+                        <span class="info-tip">
+                          <span class="info-icon" role="img" aria-label="Qué son las exclusiones">i</span>
+                          <span class="info-overlay" role="tooltip">Selectores CSS de elementos que no querés resaltar: menús, iconos decorativos o zonas que generan ruido.</span>
+                        </span>
+                      </div>
+                      <textarea id="global-exclusions" class="code-input" placeholder="nav a, .decorative-link"></textarea>
+                    </div>
+                    <div>
+                      <div class="label-with-info">
+                        <label class="field-label" for="custom-selectors">Selectores custom</label>
+                        <span class="info-tip">
+                          <span class="info-icon" role="img" aria-label="Qué son los selectores custom">i</span>
+                          <span class="info-overlay" role="tooltip">Selectores extra para marcar elementos que el detector no reconoce. Se aplican en cualquier sitio; no se guarda el dominio visitado.</span>
+                        </span>
+                      </div>
+                      <textarea id="custom-selectors" class="code-input" placeholder=".btn-guardar, td.action, #btnSubmit"></textarea>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="card">
+                  <div class="block-title">
+                    Exportar / Importar
+                    <span class="info-tip">
+                      <span class="info-icon" role="img" aria-label="Qué hace exportar e importar">i</span>
+                      <span class="info-overlay" role="tooltip">Genera una copia JSON de tu configuración en tu equipo, o restaurá una previa. Nada se sube a un servidor.</span>
+                    </span>
+                  </div>
+                  <p class="card-intro" style="margin-bottom: 14px">Copia de seguridad local de tu configuración.</p>
+                  <div class="actions">
+                    <button type="button" id="export-btn" class="btn btn-secondary">Exportar JSON</button>
+                    <button type="button" id="import-btn" class="btn btn-secondary">Importar JSON</button>
+                    <input id="import-input" type="file" accept="application/json,.json" />
+                  </div>
+                </section>
+              </div>
+            </section>
+          </form>
+        </div>
+      </main>
+
+      <footer class="options-footer">
+        <div class="footer-inner">
+          <div class="footer-actions">
+            <button type="button" id="reset-btn" class="btn btn-secondary" form="options-form">Restablecer</button>
+            <button type="submit" class="btn btn-primary" form="options-form">Guardar configuración</button>
           </div>
           <div id="status" class="status" role="status" aria-live="polite"></div>
-        </section>
-      </form>
-    </main>
+        </div>
+      </footer>
+    </div>
 
     <script src="shared/settings.js"></script>
     <script src="options.js"></script>

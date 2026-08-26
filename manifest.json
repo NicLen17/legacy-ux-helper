@@ -1,16 +1,16 @@
 {
   "manifest_version": 3,
   "name": "Legacy UX Helper",
-  "version": "1.3.0",
-  "description": "Resalta elementos interactivos en sistemas legacy sin alterar el layout. 100% local.",
+  "version": "1.4.0",
+  "description": "Resalta elementos accionables en UIs legacy. 100% local.",
   "action": {
     "default_title": "Legacy UX Helper",
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/icon16.png",
-      "32": "icons/icon32.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
+      "16": "icons/toolbar-16.png",
+      "32": "icons/toolbar-32.png",
+      "48": "icons/toolbar-48.png",
+      "128": "icons/toolbar-128.png"
     }
   },
   "background": {
@@ -36,11 +36,11 @@
     }
   ],
   "options_page": "options.html",
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage", "activeTab", "scripting"],
   "icons": {
-    "16": "icons/icon16.png",
-    "32": "icons/icon32.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16": "icons/app-16.png",
+    "32": "icons/app-32.png",
+    "48": "icons/app-48.png",
+    "128": "icons/app-128.png"
   }
 }

@@ -16,6 +16,38 @@ p {
   margin: 0;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #fff;
+}
+
+.brand-copy {
+  min-width: 0;
+}
+
+.brand--page {
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.brand-logo--lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+}
+
 button,
 input,
 select,
@@ -71,7 +103,7 @@ textarea {
 .field-hint {
   font-size: 0.75rem;
   color: #64748b;
-  margin-top: 4px;
+  margin-top: 6px;
   line-height: 1.4;
 }
 
@@ -87,18 +119,18 @@ textarea {
 
 .color-grid {
   display: grid;
-  gap: 12px;
+  gap: 20px;
 }
 
 .color-row {
   display: grid;
   grid-template-columns: 1fr auto auto;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
-  padding: 10px 12px;
+  padding: 14px 16px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .color-row-label {
@@ -128,10 +160,23 @@ textarea {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px;
+  padding: 14px 16px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
+  border-radius: 12px;
+  overflow: visible;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.toggle-stack {
+  display: grid;
+  gap: 12px;
 }
 
 .switch {
@@ -200,16 +245,129 @@ textarea {
 }
 
 textarea.code-input,
-input.text-input {
+input.text-input,
+select.text-input {
   width: 100%;
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 0.85rem;
+  background: #fff;
 }
 
 textarea.code-input {
   min-height: 88px;
   resize: vertical;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.label-with-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.label-with-info .field-label {
+  margin-bottom: 0;
+}
+
+.info-tip {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #94a3b8;
+  border-radius: 50%;
+  background: #fff;
+  color: #475569;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  user-select: none;
+}
+
+.info-tip:hover .info-icon,
+.info-tip.is-open .info-icon {
+  border-color: #2563eb;
+  color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.info-overlay {
+  display: none;
+  position: absolute;
+  z-index: 80;
+  left: 8px;
+  right: 8px;
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  bottom: calc(100% + 8px);
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.45;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.28);
+  pointer-events: none;
+  white-space: normal;
+}
+
+.info-tip:hover .info-overlay {
+  display: block;
+}
+
+.toggle-row,
+.block-title,
+.label-with-info,
+.range-label {
+  position: relative;
+}
+
+.toggle-row:hover,
+.block-title:hover,
+.label-with-info:hover,
+.range-label:hover {
+  z-index: 20;
+}
+
+.segmented-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.segmented-3 > button[data-mode] {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #fff;
+  color: #334155;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.segmented-3 > button[data-mode].active {
+  background: #dbeafe;
+  border-color: #2563eb;
+  color: #1d4ed8;
+}
+
+.segmented-3 > button[data-mode]:hover {
+  border-color: #93c5fd;
 }

@@ -67,6 +67,40 @@
     <span style="cursor: pointer">Span con cursor pointer</span>
     <div class="legacy-custom-action" style="cursor: pointer">Acción custom (.legacy-custom-action)</div>
 
+    <h2>Controles legacy (onclick, cursor pointer, tablas)</h2>
+    <p style="font-size: 12px; color: #666">
+      Activa el resaltado y probá los modos <strong>Todos</strong>, <strong>Solo legacy</strong> y <strong>Guía hover</strong>.
+    </p>
+    <div style="margin-bottom: 12px">
+      <input type="button" value="Guardar" style="background: #ccc; border: 2px outset #eee; font-family: Tahoma; padding: 2px 8px; font-size: 11px" />
+      <input type="button" value="Cancelar" style="background: #ccc; border: 2px outset #eee; font-family: Tahoma; padding: 2px 8px; font-size: 11px; margin-left: 4px" />
+    </div>
+    <div onclick="alert('div feo')" style="display: inline-block; background: #d4d0c8; border: 1px solid #808080; padding: 4px 12px; font-family: Tahoma; font-size: 11px; cursor: pointer; margin-right: 8px">
+      [ Aceptar ]
+    </div>
+    <font color="blue" style="cursor: pointer; text-decoration: underline" onclick="alert('link feo')">Enlace estilo font</font>
+    <br /><br />
+    <input type="text" style="border: 1px inset #ccc; font-family: Tahoma; font-size: 11px; padding: 2px" placeholder="Campo legacy" />
+    <select style="font-family: Tahoma; font-size: 11px; border: 1px inset #ccc; margin-left: 4px">
+      <option>Estado: Pendiente</option>
+      <option>Estado: Aprobado</option>
+    </select>
+    <table style="margin-top: 12px; font-size: 11px; font-family: Tahoma">
+      <tr style="background: #d4d0c8">
+        <th style="border: 1px solid #808080; padding: 4px">ID</th>
+        <th style="border: 1px solid #808080; padding: 4px">Cliente</th>
+        <th style="border: 1px solid #808080; padding: 4px">Acción</th>
+      </tr>
+      <tr>
+        <td style="border: 1px solid #808080; padding: 4px">001</td>
+        <td style="border: 1px solid #808080; padding: 4px">Acme Corp</td>
+        <td onclick="alert('celda')" style="border: 1px solid #808080; padding: 4px; cursor: pointer; color: blue; text-decoration: underline">Ver detalle</td>
+      </tr>
+      <tr onclick="alert('fila fea')" style="cursor: pointer">
+        <td colspan="3" style="border: 1px solid #808080; padding: 4px; background: #ffffcc">Fila completa clickeable (ERP 2005)</td>
+      </tr>
+    </table>
+
     <h2>Tabla (verificar sin layout shift)</h2>
     <table>
       <tr>

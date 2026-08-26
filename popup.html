@@ -4,26 +4,60 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Legacy UX Helper</title>
+    <link rel="icon" type="image/png" href="icons/app-48.png" />
     <link rel="stylesheet" href="shared/ui.css" />
     <style>
-      body { width: 340px; padding: 16px; }
+      body { width: 360px; padding: 16px; overflow-x: hidden; overflow-y: visible; }
       .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
       .header h1 { font-size: 1rem; }
       .status-pill { font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 999px; background: #e2e8f0; color: #475569; }
       .status-pill.on { background: #dbeafe; color: #1d4ed8; }
-      .section { margin-bottom: 14px; }
+      .section { margin-bottom: 16px; overflow: visible; }
       .section-title { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
       .shortcut-hint { font-size: 0.75rem; color: #64748b; background: #f1f5f9; border-radius: 8px; padding: 8px 10px; margin-bottom: 14px; }
       kbd { display: inline-block; padding: 2px 6px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; font-size: 0.7rem; font-family: ui-monospace, Menlo, monospace; }
-      .segmented-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-      .segmented-3 button { height: 34px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.72rem; font-weight: 600; }
+      .toggle-error { display: none; margin-top: 8px; font-size: 0.75rem; color: #b91c1c; line-height: 1.4; }
+      .toggle-error.is-visible { display: block; }
+      .segmented-3 button {
+        height: 40px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
       .segmented-3 button.active { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
-      .quick-toggles { display: grid; gap: 8px; }
+      .quick-toggles { display: grid; gap: 12px; overflow: visible; }
+      .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+      .header h1 { font-size: 1rem; }
+      .status-pill { font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 999px; background: #e2e8f0; color: #475569; }
+      .status-pill.on { background: #dbeafe; color: #1d4ed8; }
+      .section { margin-bottom: 16px; }
+      .section-title { font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+      .shortcut-hint { font-size: 0.75rem; color: #64748b; background: #f1f5f9; border-radius: 8px; padding: 8px 10px; margin-bottom: 14px; }
+      kbd { display: inline-block; padding: 2px 6px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; font-size: 0.7rem; font-family: ui-monospace, Menlo, monospace; }
+      .toggle-error { display: none; margin-top: 8px; font-size: 0.75rem; color: #b91c1c; line-height: 1.4; }
+      .toggle-error.is-visible { display: block; }
+      .segmented-3 button {
+        height: 40px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+      .segmented-3 button.active { background: #dbeafe; border-color: #2563eb; color: #1d4ed8; }
+      .quick-toggles { display: grid; gap: 12px; }
     </style>
   </head>
   <body>
     <header class="header">
-      <h1>Legacy UX Helper</h1>
+      <div class="brand">
+        <img class="brand-logo" src="icons/app-48.png" alt="" width="32" height="32" />
+        <h1>Legacy UX Helper</h1>
+      </div>
       <span id="status-pill" class="status-pill">OFF</span>
     </header>
 
@@ -31,6 +65,7 @@
 
     <section class="section">
       <button id="toggle-btn" class="btn btn-primary" type="button" style="width: 100%">Activar resaltado</button>
+      <p id="toggle-error" class="toggle-error" role="status"></p>
     </section>
 
     <section class="section">
@@ -44,17 +79,29 @@
 
     <section class="section quick-toggles">
       <div class="toggle-row">
-        <div><strong>Entrenamiento</strong></div>
+        <div class="toggle-label">
+          <strong>Entrenamiento</strong>
+          <span class="info-tip">
+            <span class="info-icon" role="img" aria-label="Qué hace el modo entrenamiento">i</span>
+            <span class="info-overlay" role="tooltip">Muestra una etiqueta con el tipo de cada elemento detectado (Botón, Enlace, etc.) para aprender la interfaz.</span>
+          </span>
+        </div>
         <label class="switch"><input id="training-toggle" type="checkbox" /><span class="switch-slider"></span></label>
       </div>
       <div class="toggle-row">
-        <div><strong>Indicador flotante</strong></div>
+        <div class="toggle-label">
+          <strong>Indicador flotante</strong>
+          <span class="info-tip">
+            <span class="info-icon" role="img" aria-label="Qué hace el indicador flotante">i</span>
+            <span class="info-overlay" role="tooltip">Chip en la esquina inferior que confirma que el helper está activo y muestra el modo en uso.</span>
+          </span>
+        </div>
         <label class="switch"><input id="indicator-toggle" type="checkbox" /><span class="switch-slider"></span></label>
       </div>
     </section>
 
-    <footer style="margin-top: 8px">
-      <a class="btn btn-secondary" href="options.html" target="_blank" rel="noopener" style="width: 100%; text-align: center">Configuración avanzada</a>
+    <footer>
+      <a class="btn btn-secondary" href="options.html" target="_blank" rel="noopener" style="width: 100%; text-align: center">Configuración</a>
     </footer>
 
     <script src="shared/settings.js"></script>
